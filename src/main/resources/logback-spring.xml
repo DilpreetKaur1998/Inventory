@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <springProfile name="default">
+        <!--<property name="HOME" value="/jarvis-logs" />-->
+        <appender name="DAILY_ROLLING_FILE_APPENDER"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>inventoryManager-api.log</file>
+            <rollingPolicy
+                    class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>inventoryManager-api.%d{yyyy-MM-dd}.log
+                </fileNamePattern>
+                <maxHistory>15</maxHistory>
+            </rollingPolicy>
+            <encoder
+                    class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <Pattern>
+                    %d{yyyy-MM-dd HH:mm:ss} [%-5p] %c - %msg%n
+                </Pattern>
+            </encoder>
+        </appender>
+        <logger name="com.flic.inventoryManagement" level="DEBUG"
+                additivity="false">
+            <appender-ref ref="DAILY_ROLLING_FILE_APPENDER"/>
+        </logger>
+        <logger name="org.springframework.security" level="DEBUG"/>
+<!--        <logger name="org.springframework.security.saml2" level="TRACE" />-->
+        <logger name="org.springframework.security.authentication" level="TRACE" />
+        <logger name="org.springframework.security.authorization" level="TRACE" />
+<!--        <logger name="org.opensaml" level="INFO" />-->
+<!--        <logger name="org.opensaml.saml" level="TRACE" />-->
+        <root level="INFO">
+            <appender-ref ref="DAILY_ROLLING_FILE_APPENDER"/>
+        </root>
+    </springProfile>
+
+</configuration>
