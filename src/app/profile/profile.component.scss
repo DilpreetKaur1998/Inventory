@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+
+}
+
+.top-panel {
+  flex: 1;
+  margin-top:1px;
+  border-radius: 20px;
+  background-color: #007ba7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-panel {
+  flex: 2;
+  margin-left: 35%;
+}
+
+.photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 100px;
+  background-size: cover;
+}
+
+.name,
+.personal-info,
+.privileges {
+  margin-top:0.3rem;
+  color: white;
+ cursor: pointer;
+}
+.personal-info:hover,
+.privileges:hover,
+.privileges:active {
+  text-decoration: underline;
+}
+
+
+.data{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

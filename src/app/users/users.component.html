@@ -1,0 +1,381 @@
+<div>
+  <mat-tab-group [@flipIn] animationDuration="0ms" style="overflow: hidden;" #tabGroup >
+    <mat-tab [@flipIn] label="Create Employee" style="overflow: hidden;">
+      <div >
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" style="overflow: hidden">
+          <div style="display: flex; flex-wrap: wrap; margin-left: 3%; margin-top: 2%;">
+            <div class="form-group" style="width: 31%; margin-right: 10px;">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>User Id</mat-label>
+                <input matInput formControlName="userId" maxlength="50">
+                <mat-error *ngIf="userForm.get('userId').invalid">User ID is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="form-group" style="width: 31%; margin-right: 10px;">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Employee Name</mat-label>
+                <input matInput formControlName="employeeName" maxlength="50">
+                <mat-error *ngIf="userForm.get('employeeName').invalid">Employee Name is required</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group" style="width: 31%; margin-right: 10px;">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Employee ID</mat-label>
+                <input matInput formControlName="employeeId" placeholder="Enter employee ID" type="number">
+                <mat-error *ngIf="userForm.get('employeeId').invalid">Employee ID must be numeric</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group" style="width: 31%; margin-right: 10px;" *ngIf="showPasswordField">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>One Time Password</mat-label>
+                <input matInput formControlName="password" type="password" minlength="5" maxlength="16">
+                <mat-error *ngIf="userForm.get('password').invalid">
+                  Password must be between 5-16 characters
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group" style="width: 31%; margin-right: 10px;" [ngStyle]="{'margin-left': showPasswordField ? '0px' : '0px' }">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Assign Department</mat-label>
+                <input matInput formControlName="department" placeholder="Enter department">
+                <mat-error *ngIf="userForm.get('department').invalid">Department is required</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group" style="width: 31%; margin-right: 10px;">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="emailId" placeholder="Enter email" type="email">
+                <mat-error *ngIf="userForm.get('emailId').invalid">Kindly provide abc@domain.com format</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group" style="width: 31%; margin-right: 10px;">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Assign Privileges</mat-label>
+                <mat-select formControlName="privileges">
+                  <mat-option value="Admin">Admin</mat-option>
+                  <mat-option value="Manager">Manager/ Project Manager</mat-option>
+                  <mat-option value="Employee">Employee</mat-option>
+                </mat-select>
+                <mat-error *ngIf="userForm.get('privileges').invalid">Kindly select Privileges</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: center; margin-top: 20px;">
+            <div class="form-group" style="width: 22%; margin-right: 10px;">
+              <label for="profilePic" class="custom-file-label">Upload Now</label>
+              <input type="file" id="profilePic" accept="image/*" (change)="onFileSelected($event)" class="custom-file-input">
+              <small *ngIf="selectedFileName" class="form-text text-muted" style="margin: 2%;">{{ selectedFileName }}</small>
+              <div>
+                <small *ngIf="!selectedFileName" class="form-text text-muted">Size not exceeding 5MB</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions" style="display: flex; justify-content: flex-end; margin-right: 5%; margin-top: 20px;">
+            <button *ngIf="showPasswordField" mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid" (click)="saveUser()">Save</button>
+            <button *ngIf="!showPasswordField" mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid" (click)="updateUser()">Save</button>
+            <button mat-raised-button color="warn" type="button" (click)="resetForm()" style="margin-left: 20px;">Reset</button>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+<!--    <mat-tab label="Manage Employee">-->
+<!--      <form [formGroup]="manageForm" (ngSubmit)="onSubmit()">-->
+<!--        <div style="display: flex; flex-direction: row; margin-left:2%">-->
+<!--          <div class="search-filter-container">-->
+<!--            <label class="form-label">User Name/Email</label>-->
+<!--            <div style="display: flex; flex-direction: row">-->
+<!--              <input formControlName="userId" class="form-control" type="search" placeholder="Search" aria-label="Search">-->
+<!--              <button matTooltip="Search" class="btn btn-outline-secondary" type="submit"><i class="bi bi-search" (click)="getAllUsersData(this.manageForm.value.userId)" ></i></button>-->
+<!--              <button (click)="showFilter = !showFilter" class="btn btn-outline-secondary" type="button" matTooltip="Filter"><i class="bi bi-funnel"></i></button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div style="width: 35%; margin:0.5%">-->
+<!--            <mat-card *ngIf="showFilter" style="padding:3%">-->
+<!--              <div style="display: flex; flex-direction: row; justify-content: space-between">-->
+<!--                <label class="form-label">Filters</label>-->
+<!--                <label class="form-label">Clear all</label>-->
+<!--              </div>-->
+<!--              <div class="form-fields-container">-->
+<!--                <mat-form-field appearance="outline" style="width:30%; height: auto;">-->
+<!--                  <mat-label class="form-label1" >User type</mat-label>-->
+<!--                  <mat-select>-->
+<!--                    <mat-option value="Admin">Admin</mat-option>-->
+<!--                    <mat-option value="Manager">Project Manager</mat-option>-->
+<!--                    <mat-option value="Employee">Employee</mat-option>-->
+<!--                  </mat-select>-->
+<!--                </mat-form-field>-->
+
+<!--                <mat-form-field appearance="outline" style="width:30%; height: auto;">-->
+<!--                  <mat-label class="form-label1">Status</mat-label>-->
+<!--                  <mat-select>-->
+<!--                    <mat-option value="active">Active</mat-option>-->
+<!--                    <mat-option value="inactive">InActive</mat-option>-->
+<!--                  </mat-select>-->
+<!--                </mat-form-field>-->
+
+<!--                <mat-form-field appearance="outline" style="width:30%; height: auto;">-->
+<!--                  <mat-label class="form-label1">Department</mat-label>-->
+<!--                  <mat-select>-->
+<!--                    <mat-option value="store">Store</mat-option>-->
+<!--                    <mat-option value="purchase">Purchase</mat-option>-->
+<!--                  </mat-select>-->
+<!--                </mat-form-field>-->
+<!--              </div>-->
+<!--            </mat-card>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" >-->
+
+<!--          <ng-container matColumnDef="select">-->
+<!--            <th mat-header-cell *matHeaderCellDef>-->
+<!--              <mat-checkbox (change)="$event ? toggleAllRows() : null"-->
+<!--                            [checked]="selection.hasValue() && isAllSelected()"-->
+<!--                            [indeterminate]="selection.hasValue() && !isAllSelected()"-->
+<!--                            [aria-label]="checkboxLabel()">-->
+<!--              </mat-checkbox>-->
+<!--            </th>-->
+<!--            <td mat-cell *matCellDef="let row">-->
+<!--              <mat-checkbox (click)="$event.stopPropagation()"-->
+<!--                            (change)="$event ? selection.toggle(row) : null"-->
+<!--                            [checked]="selection.isSelected(row)"-->
+<!--                            [aria-label]="checkboxLabel(row)">-->
+<!--              </mat-checkbox>-->
+<!--            </td>-->
+<!--          </ng-container>-->
+
+<!--          <ng-container matColumnDef="name">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Name </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.name}} </td>-->
+<!--          </ng-container>-->
+
+<!--          <ng-container matColumnDef="email">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Email </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.email}} </td>-->
+<!--          </ng-container>-->
+
+<!--          <ng-container matColumnDef="userType">-->
+<!--            <th mat-header-cell *matHeaderCellDef> User Type </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.userType}} </td>-->
+<!--          </ng-container>-->
+
+<!--          <ng-container matColumnDef="status">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Status </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.status}} </td>-->
+<!--          </ng-container>-->
+
+<!--          <ng-container matColumnDef="teams">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Teams </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.teams}} </td>-->
+<!--          </ng-container>-->
+
+<!--          <ng-container matColumnDef="joined">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Joined </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.joined}} </td>-->
+<!--          </ng-container>-->
+
+<!--          <ng-container matColumnDef="invitedBy">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Invited By </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.invitedBy}} </td>-->
+<!--          </ng-container>-->
+<!--          <ng-container matColumnDef="lastActive">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Last Active </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.lastActive}} </td>-->
+<!--          </ng-container>-->
+
+<!--          <ng-container matColumnDef="action">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Action </th>-->
+<!--            <td mat-cell *matCellDef="let row">-->
+<!--              <button mat-icon-button [matMenuTriggerFor]="menu" >-->
+<!--                <mat-icon>more_vert</mat-icon>-->
+<!--              </button>-->
+<!--              <mat-menu #menu="matMenu">-->
+
+<!--                <button mat-menu-item (click)="personalData()">-->
+<!--                  <mat-icon>edit</mat-icon>-->
+<!--                  <span>Edit Personal Data</span>-->
+<!--                </button>-->
+<!--                <button mat-menu-item (click)="privileges()">-->
+<!--                  <mat-icon>domain</mat-icon>-->
+<!--                  <span>Edit Privileges</span>-->
+<!--                </button>-->
+<!--                <button mat-menu-item>-->
+<!--                  <mat-icon>delete</mat-icon>-->
+<!--                  <span>Delete</span>-->
+<!--                </button>-->
+<!--                &lt;!&ndash; Add more menu items as needed &ndash;&gt;-->
+<!--              </mat-menu>-->
+<!--            </td>-->
+<!--          </ng-container>-->
+
+
+
+<!--          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+<!--          <tr mat-row *matRowDef="let row; columns: displayedColumns;"-->
+<!--              (click)="selection.toggle(row)">-->
+<!--          </tr>-->
+<!--        </table>-->
+
+<!--      </form>-->
+<!--    </mat-tab>-->
+
+    <mat-tab [@flipIn] label="Manage Employee">
+      <form [formGroup]="searchForm" >
+        <div style="display: flex; flex-direction: row; margin-left:2%">
+          <div class="search-filter-container">
+            <label class="form-label">User Name/Email</label>
+            <div style="display: flex; flex-direction: row">
+              <input formControlName="userId" class="form-control" type="search" placeholder="Search" aria-label="Search">
+              <button matTooltip="Search" class="btn btn-outline-secondary" type="submit" (click)="loadData()">
+                <i class="bi bi-search"></i>
+              </button>
+              <button (click)="showFilter = !showFilter" class="btn btn-outline-secondary" type="button" matTooltip="Filter">
+                <i class="bi bi-funnel"></i>
+              </button>
+            </div>
+          </div>
+          <div style="width: 35%; margin:0.5%">
+            <mat-card [@flipIn] *ngIf="showFilter" style="padding:3%">
+              <div style="display: flex; flex-direction: row; justify-content: space-between">
+                <label class="form-label">Filters</label>
+                <label class="form-label" (click)="resetSearch()" style="cursor: pointer">Clear all</label>
+              </div>
+              <div class="form-fields-container">
+                                <mat-form-field appearance="outline" style="width:30%; height: auto;">
+                                  <mat-label class="form-label1" >User type</mat-label>
+                                  <mat-select formControlName="role">
+                                    <mat-option value="Admin">Admin</mat-option>
+                                    <mat-option value="Manager">Project Manager</mat-option>
+                                    <mat-option value="Employee">Employee</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" style="width:30%; height: auto;">
+                                  <mat-label class="form-label1">Status</mat-label>
+                                  <mat-select formControlName="status">
+                                    <mat-option value="true">Active</mat-option>
+                                    <mat-option value="false">InActive</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" style="width:30%; height: auto;">
+                                  <mat-label class="form-label1">Department</mat-label>
+                                  <mat-select formControlName="department">
+                                    <mat-option value="store">Store</mat-option>
+                                    <mat-option value="purchase">Purchase</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+        <table mat-table [@flipIn] *ngIf="dataSource.data && dataSource.data.length > 0" [dataSource]="dataSource" class="mat-elevation-z8" >
+
+          <!-- Checkbox for selection -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+<!--              <mat-checkbox (change)="$event ? toggleAllRows() : null"-->
+<!--                            [checked]="selection.hasValue() && isAllSelected()"-->
+<!--                            [indeterminate]="selection.hasValue() && !isAllSelected()"-->
+<!--                            [aria-label]="checkboxLabel()">-->
+<!--              </mat-checkbox>-->
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)"
+                           >
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="userId">
+            <th mat-header-cell *matHeaderCellDef> User ID </th>
+            <td mat-cell *matCellDef="let element"> {{ element["userId"] }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="employeeId">
+            <th mat-header-cell *matHeaderCellDef> Employee ID </th>
+            <td mat-cell *matCellDef="let element"> {{ element["employeeId"] }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="employeeName">
+            <th mat-header-cell *matHeaderCellDef> Employee Name </th>
+            <td mat-cell *matCellDef="let element"> {{ element["employeeName"] }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="department">
+            <th mat-header-cell *matHeaderCellDef> Department </th>
+            <td mat-cell *matCellDef="let element"> {{ element["department"] }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="privileges">
+            <th mat-header-cell *matHeaderCellDef> Privileges </th>
+            <td mat-cell *matCellDef="let element"> {{ element["privileges"] }} </td>
+          </ng-container>
+          <ng-container matColumnDef="emailId">
+            <th mat-header-cell *matHeaderCellDef> Email Id </th>
+            <td mat-cell *matCellDef="let element"> {{ element["emailId"] }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef> Invited By </th>
+            <td mat-cell *matCellDef="let element"> {{ element["createdBy"] }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdDate">
+            <th mat-header-cell *matHeaderCellDef> Joined On </th>
+            <td mat-cell *matCellDef="let element"> {{ element["createdDate"] }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let element"> <button mat-stroked-button [color]=" element.status == 'ACTIVE' ? 'primary' : 'warn'" (click)=toggleStatus(element) > {{ element.status }} </button> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button (click)="goToEditUser(row['userId']); this.showPasswordField = false; this.userForm.removeControl('password'); " mat-menu-item>
+<!--                  (click)="backToCreation(row['userId']); this.showPasswordField = false;  this.userForm.removeControl('password'); "-->
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit Personal Data</span>
+                </button>
+                <button mat-menu-item (click)="privileges(row['userId'], row['employeeName'])">
+                  <mat-icon>domain</mat-icon>
+                  <span>Edit Privileges</span>
+                </button>
+                <button mat-menu-item (click)="deleteUser(row['userId'])">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+
+        </table>
+        <mat-paginator *ngIf="dataSource.data && dataSource.data.length > 0"
+                       [length]="totalElements"
+                       [pageSize]="pageSize"
+                       [pageSizeOptions]="[2,5,10, 25, 50]"
+                       [pageIndex]="pageIndex"
+                       (page)="onPageChanged($event)">
+        </mat-paginator>
+
+      </form>
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -1,0 +1,45 @@
+.custom-file-label {
+  background-color: #007BA7;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 15px 25px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: .0178571429em;
+}
+.custom-file-input {
+  width: 0.1px;
+  height: 0.1px;
+  overflow: hidden;
+  position: absolute;
+}
+
+.search-filter-container {
+  width: 40%;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  width: 100%;
+}
+
+.btn {
+  border-radius: 0;
+}
+.btn:focus , .form-control{
+  box-shadow: none !important;
+  outline: none !important;
+}
+.form-fields-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.form-label1 {
+  font-size: 12px;
+  font-weight: 600;
+}

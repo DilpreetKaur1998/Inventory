@@ -1,0 +1,71 @@
+<form [formGroup]="formGroup" (ngSubmit)="savePermissions()" [@flipIn]>
+  <h5 style="text-align: center; margin:2%">Privileges Of {{ this.name }} ({{this.userId}}) </h5>
+  <div class="table-container">
+    <table>
+      <thead>
+      <tr>
+        <th>Permission Level</th>
+        <th>Read</th>
+        <th>Write</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let permission of permissions">
+        <td>{{ permission.name }}</td>
+        <td>
+          <mat-slide-toggle formControlName="inventoryRead"></mat-slide-toggle>
+        </td>
+        <td>
+          <mat-slide-toggle formControlName="inventoryWrite"></mat-slide-toggle>
+        </td>
+      </tr>
+      <tr *ngFor="let entry of stocks">
+        <td>{{ entry.name }}</td>
+        <td>
+          <mat-slide-toggle formControlName="stockRead"></mat-slide-toggle>
+        </td>
+        <td>
+          <mat-slide-toggle formControlName="stockWrite"></mat-slide-toggle>
+        </td>
+      </tr>
+      <tr *ngFor="let issue of issues">
+        <td>{{ issue.name }}</td>
+        <td>
+          <mat-slide-toggle formControlName="issueRead"></mat-slide-toggle>
+        </td>
+        <td>
+          <mat-slide-toggle formControlName="issueWrite"></mat-slide-toggle>
+        </td>
+      </tr>
+
+      <tr *ngFor="let data of returns">
+        <td>{{ data.name }}</td>
+        <td>
+          <mat-slide-toggle formControlName="returnRead"></mat-slide-toggle>
+        </td>
+        <td>
+          <mat-slide-toggle formControlName="returnWrite"></mat-slide-toggle>
+        </td>
+
+      </tr>
+      <tr *ngFor="let bom of bomEntry">
+        <td>{{ bom.name }}</td>
+
+        <td>
+          <mat-slide-toggle formControlName="bomRead"></mat-slide-toggle>
+        </td>
+        <td>
+          <mat-slide-toggle formControlName="bomWrite"></mat-slide-toggle>
+        </td>
+
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="form-actions" style="display: flex; justify-content: center;">
+    <button mat-raised-button color="warn" type="button" (click)="back()" style=" margin-right:20px"> Back</button>
+    <button mat-raised-button color="primary" type="submit" >Save</button>
+    <button mat-raised-button color="warn" type="reset" (click)="resetForm()" style=" margin-left:20px"> Reset</button>
+  </div>
+</form>

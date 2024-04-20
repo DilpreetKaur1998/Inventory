@@ -1,0 +1,27 @@
+.user-privileges {
+  /* ... styles for the container */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th:first-child,
+td:first-child {
+  /* style for first column (permission level) */
+}
+
+.table-container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;
+  margin :2%
+}
+
